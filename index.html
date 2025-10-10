@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Простой список для Telegram Web App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 16px;
+      background-color: var(--tg-theme-bg-color);
+      color: var(--tg-theme-text-color);
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 8px 0;
+      padding: 8px;
+      background-color: var(--tg-theme-button-color);
+      color: var(--tg-theme-button-text-color);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Выберите пункт из списка:</h2>
+  <ul id="itemList">
+    <li data-id="1">Пункт 1</li>
+    <li data-id="2">Пункт 2</li>
+    <li data-id="3">Пункт 3</li>
+  </ul>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+
+    // Обработчик клика по элементу списка
+    document.getElementById('itemList').addEventListener('click', (event) => {
+      if (event.target.tagName === 'LI') {
+        const selectedId = event.target.getAttribute('data-id');
+        // Отправляем выбор обратно в бота как строку
+        tg.sendData(JSON.stringify({ selectedItem: selectedId }));
+      }
+    });
+
+    // Можно задать заголовок страницы внутри телеграма (опционально)
+    tg.expand();
+    tg.MainButton.setText('Отправить');
+  </script>
+</body>
+</html>
