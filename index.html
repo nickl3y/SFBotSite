@@ -2,52 +2,53 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Простой список для Telegram Web App</title>
+  <title>Список техники</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 16px;
-      background-color: var(--tg-theme-bg-color);
-      color: var(--tg-theme-text-color);
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      margin: 8px 0;
-      padding: 8px;
-      background-color: var(--tg-theme-button-color);
-      color: var(--tg-theme-button-text-color);
-      border-radius: 6px;
-      cursor: pointer;
-    }
+    body { font-family: Arial, sans-serif; background: var(--tg-theme-bg-color); color: var(--tg-theme-text-color); padding: 12px;}
+    .item { border: 1px solid #ccc; border-radius: 8px; padding: 12px; margin-bottom: 16px; background: var(--tg-theme-button-color);}
+    .item h3 { margin-top: 0; }
+    .photos { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px;}
+    .photos img { height: 100px; border-radius: 6px; cursor: pointer; object-fit: cover;}
+    .row { font-size: 15px; margin-top: 5px; }
+    .label { font-weight: bold; }
+    @media (max-width: 600px) {.photos img {height:70px;}}
   </style>
 </head>
 <body>
-  <h2>Выберите пункт из списка:</h2>
-  <ul id="itemList">
-    <li data-id="1">Пункт 1</li>
-    <li data-id="2">Пункт 2</li>
-    <li data-id="3">Пункт 3</li>
-  </ul>
-
+  <h1>Список техники</h1>
+  <div id="itemsContainer">Загрузка...</div>
   <script>
-    const tg = window.Telegram.WebApp;
 
-    // Обработчик клика по элементу списка
-    document.getElementById('itemList').addEventListener('click', (event) => {
-      if (event.target.tagName === 'LI') {
-        const selectedId = event.target.getAttribute('data-id');
-        // Отправляем выбор обратно в бота как строку
-        tg.sendData(JSON.stringify({ selectedItem: selectedId }));
-      }
-    });
-
-    // Можно задать заголовок страницы внутри телеграма (опционально)
-    tg.expand();
-    tg.MainButton.setText('Отправить');
+    fetch("http://89.191.225.222:8000/machines")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('itemsContainer');
+        container.textContent = "";
+        data.items.forEach(item => {
+          const div = document.createElement('div');
+          div.classList.add('item');
+          div.innerHTML = `
+            <h3>${item.type} ${item.brand} ${item.model}</h3>
+            <div class="row"><span class="label">Цена: </span>${item.price}</div>
+            <div class="row"><span class="label">Вес: </span>${item.weight}</div>
+            <div class="row"><span class="label">Статус: </span>${item.status}</div>
+            <div class="row"><span class="label">Описание: </span>${item.comment}</div>
+          `;
+          const photosDiv = document.createElement('div');
+          photosDiv.className = 'photos';
+          item.photos.forEach(photoPath => {
+            const img = document.createElement('img');
+            img.src = basePhotoUrl + photoPath;
+            photosDiv.appendChild(img);
+          });
+          div.appendChild(photosDiv);
+          container.appendChild(div);
+        });
+      })
+      .catch(() => {
+        document.getElementById('itemsContainer').textContent = "Ошибка загрузки данных";
+      });
   </script>
 </body>
 </html>
