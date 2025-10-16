@@ -39,15 +39,6 @@
 			<div class="row"><span class="label">Статус: </span>${item.status}</div>
 			<div class="row"><span class="label">Описание: </span>${item.comment}</div>
 		  `;
-		  const photosDiv = document.createElement('div');
-		  photosDiv.className = 'photos';
-		  item.photos.forEach(photoPath => {
-			const img = document.createElement('img');
-			img.src = basePhotoUrl + photoPath;
-			photosDiv.appendChild(img);
-		  });
-		  div.appendChild(photosDiv);
-		  container.appendChild(div);
 		});
 	  })
 	  .catch(err => {
@@ -58,4 +49,5 @@
 		
 </body>
 </html>
+
 
