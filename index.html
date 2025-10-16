@@ -19,7 +19,7 @@
   <h1>Список техники</h1>
   <div id="itemsContainer">Загрузка...</div>
 	<script>
-	fetch("https://specteq.ru/machines")
+	fetch("/machines")
 	  .then(res => {
 		if (!res.ok) throw new Error("HTTP " + res.status);
 		return res.json();
@@ -47,6 +47,7 @@
 		
 </body>
 </html>
+
 
 
 
