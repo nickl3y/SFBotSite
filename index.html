@@ -20,7 +20,7 @@
   <div id="itemsContainer">Загрузка...</div>
   <script>
 
-    fetch("https://specteq.ru/machines")
+    fetch("http://specteq.ru/machines")
       .then(res => res.json())
       .then(data => {
         const container = document.getElementById('itemsContainer');
@@ -52,4 +52,5 @@
   </script>
 </body>
 </html>
+
 
