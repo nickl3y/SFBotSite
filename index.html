@@ -21,7 +21,7 @@
 	<script>
 	const basePhotoUrl = "http://specteq.ru/photos/";
 
-	fetch("/machines")
+	fetch("http://specteq.ru/machines")
 	  .then(res => {
 		if (!res.ok) throw new Error("HTTP " + res.status);
 		return res.json();
@@ -49,5 +49,6 @@
 		
 </body>
 </html>
+
 
 
