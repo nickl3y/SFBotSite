@@ -18,39 +18,44 @@
 <body>
   <h1>Список техники</h1>
   <div id="itemsContainer">Загрузка...</div>
-  <script>
+	<script>
+	const basePhotoUrl = "http://specteq.ru/photos/";
 
-    fetch("http://specteq.ru/machines")
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('itemsContainer');
-        container.textContent = "";
-        data.items.forEach(item => {
-          const div = document.createElement('div');
-          div.classList.add('item');
-          div.innerHTML = `
-            <h3>${item.type} ${item.brand} ${item.model}</h3>
-            <div class="row"><span class="label">Цена: </span>${item.price}</div>
-            <div class="row"><span class="label">Вес: </span>${item.weight}</div>
-            <div class="row"><span class="label">Статус: </span>${item.status}</div>
-            <div class="row"><span class="label">Описание: </span>${item.comment}</div>
-          `;
-          const photosDiv = document.createElement('div');
-          photosDiv.className = 'photos';
-          item.photos.forEach(photoPath => {
-            const img = document.createElement('img');
-            img.src = basePhotoUrl + photoPath;
-            photosDiv.appendChild(img);
-          });
-          div.appendChild(photosDiv);
-          container.appendChild(div);
-        });
-      })
-      .catch(() => {
-        document.getElementById('itemsContainer').textContent = "Ошибка загрузки данных";
-      });
-  </script>
+	fetch("/machines")
+	  .then(res => {
+		if (!res.ok) throw new Error("HTTP " + res.status);
+		return res.json();
+	  })
+	  .then(data => {
+		const container = document.getElementById('itemsContainer');
+		container.textContent = "";
+		data.items.forEach(item => {
+		  const div = document.createElement('div');
+		  div.classList.add('item');
+		  div.innerHTML = `
+			<h3>${item.type} ${item.brand} ${item.model}</h3>
+			<div class="row"><span class="label">Цена: </span>${item.price}</div>
+			<div class="row"><span class="label">Вес: </span>${item.weight}</div>
+			<div class="row"><span class="label">Статус: </span>${item.status}</div>
+			<div class="row"><span class="label">Описание: </span>${item.comment}</div>
+		  `;
+		  const photosDiv = document.createElement('div');
+		  photosDiv.className = 'photos';
+		  item.photos.forEach(photoPath => {
+			const img = document.createElement('img');
+			img.src = basePhotoUrl + photoPath;
+			photosDiv.appendChild(img);
+		  });
+		  div.appendChild(photosDiv);
+		  container.appendChild(div);
+		});
+	  })
+	  .catch(err => {
+		document.getElementById('itemsContainer').textContent = "Ошибка: " + err.message;
+		console.error("Ошибка при загрузке /machines:", err);
+	  });
+	</script>
+		
 </body>
 </html>
-
 
